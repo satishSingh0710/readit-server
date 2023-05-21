@@ -8,7 +8,8 @@ import helmet from "helmet"
 import path from "path"
 import { fileURLToPath } from "url";
 import { register, login } from "./controllers/auth.js"; 
-
+import postRoutes from "./routes/post.js";
+import { verifyToken } from "./middlewares/auth.js";
 // configurations for middlewares
  const __filename = fileURLToPath(import.meta.url);
  const __dirname = path.dirname(__filename);
@@ -26,6 +27,7 @@ import { register, login } from "./controllers/auth.js";
 app.post("/auth/register", register); 
 app.post("/auth/login", login); 
 
+app.use("/post", postRoutes); 
 
 const PORT = process.env.PORT || 6001
 mongoose.connect(process.env.MONGO_URL, {
