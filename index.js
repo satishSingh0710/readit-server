@@ -9,7 +9,7 @@ import path from "path"
 import { fileURLToPath } from "url";
 import { register, login } from "./controllers/auth.js"; 
 import postRoutes from "./routes/post.js";
-import { verifyToken } from "./middlewares/auth.js";
+
 // configurations for middlewares
  const __filename = fileURLToPath(import.meta.url);
  const __dirname = path.dirname(__filename);

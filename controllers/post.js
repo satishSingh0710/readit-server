@@ -57,14 +57,33 @@ export const likePost = async (req, res) => {
       post.likes.set(userId, true);
     }
 
-    // new: true => it will give me the updated post, 
-    // if I don't use it then the post will be updated but I'll get the previous value of it. 
+    // new: true => it will give me the updated post,
+    // if I don't use it then the post will be updated but I'll get the previous value of it.
     const updatedPost = await Post.findByIdAndUpdate(
       id,
       { likes: post.likes },
       { new: true }
     );
     res.status(201).json({ updatedPost });
+  } catch (error) {
+    res.status(501).json({ error: error.message });
+  }
+};
+
+// comments feature
+// I'm mapping userID with the comments made on any given post
+export const commentOnPost = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { userId, comment } = req.body;
+    const post = await Post.findById(id);
+    post.comments.get(userId).push(comment);
+    const updatedComment = await Post.findByIdAndUpdate(
+      id,
+      { comments: post.comments },
+      { new: true }
+    );
+    res.status(201).json({ updatedComment });
   } catch (error) {
     res.status(501).json({ error: error.message });
   }
