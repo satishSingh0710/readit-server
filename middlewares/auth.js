@@ -13,6 +13,7 @@ export const verifyToken = async (req, res, next) => {
     req.user = verified;
     next();
   } catch (error) {
+    console.log("Fails to authenticate the user");
     res.status(500).json({ error: error.message });
   }
 };

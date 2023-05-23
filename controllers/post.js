@@ -37,10 +37,13 @@ export const getFeedPosts = async (req, res) => {
 // check for the posts where userId matches with the id of logged in user
 export const getUserPosts = async (req, res) => {
   try {
+    // console.log("Inside get req for posts");
+    console.log(req.params);
     const { userId } = req.params;
     const userPosts = await Post.find({ userId });
     res.status(200).json({ userPosts });
   } catch (error) {
+    console.log("There is an error here");
     res.status(404).json({ error: error.message });
   }
 };
@@ -49,7 +52,7 @@ export const likePost = async (req, res) => {
   try {
     const { id } = req.params;
     const { userId } = req.body;
-    const post = await Post.findById({ id });
+    const post = await Post.findById(id);
     // instead of .get I can also use .has method, but it is more convenient
     const isLiked = post.likes.get({ userId });
     if (isLiked) {
@@ -78,10 +81,22 @@ export const commentOnPost = async (req, res) => {
     const { id } = req.params;
     const { userId, comment } = req.body;
     const post = await Post.findById(id);
-    post.comments.get(userId).push(comment);
+
+    // const updatedComment = await Post.findByIdAndUpdate(
+    //   id,
+    //   { comments: post.comments },
+    //   { new: true }
+    // );
+    const newComment = {
+      userId: userId,
+      comment: comment,
+    };
+    post.comments.push(newComment);
     const updatedComment = await Post.findByIdAndUpdate(
       id,
-      { comments: post.comments },
+      {
+        comments: post.comments,
+      },
       { new: true }
     );
     res.status(201).json({ updatedComment });
