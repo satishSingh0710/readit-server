@@ -6,6 +6,9 @@ import User from "../models/User.js";
 export const register = async (req, res) => {
   try {
     const { userName, email, password } = req.body;
+    const user = await User.findOne({userName: userName}); 
+    console.log(user); 
+    if (user){return res.status(501).json({"message":"User is already present"})}
     const salt = await bcrypt.genSalt();
     const passwordHashed = await bcrypt.hash(password, salt);
     const newUser = new User({
@@ -25,7 +28,9 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
   try {
     const { userName, password } = req.body;
-    const user = await User.findOne({ userName: userName });
+    console.log(userName, password); 
+    const user = await User.findOne({ userName: userName});
+    console.log(user); 
     if (!user) return res.status(400).json({ message: "User does not exist." });
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch)

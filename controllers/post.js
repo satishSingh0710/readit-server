@@ -1,12 +1,13 @@
-import Post from "../models/Post";
-import User from "../models/User";
+import Post from "../models/Post.js";
+import User from "../models/User.js";
 
 // initially post with 0 likes and 0 comments
 // once post is saved, fetch all the posts and send to the front end
 export const createPost = async (req, res) => {
   try {
     const { userId, title, body } = req.body;
-    const user = await User.findById({ userId });
+    console.log(userId);
+    const user = await User.findById(userId);
     const newPost = new Post({
       userId: userId,
       userName: user.userName,
@@ -16,7 +17,7 @@ export const createPost = async (req, res) => {
       comments: [],
     });
     await newPost.save();
-    const posts = Post.find();
+    const posts = await Post.find();
     return res.status(201).json({ posts });
   } catch (error) {
     res.status(409).json({ error: error.message });
