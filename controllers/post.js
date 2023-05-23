@@ -54,7 +54,8 @@ export const likePost = async (req, res) => {
     const { userId } = req.body;
     const post = await Post.findById(id);
     // instead of .get I can also use .has method, but it is more convenient
-    const isLiked = post.likes.get({ userId });
+    const isLiked = post.likes.get(userId);
+    // console.log(isLiked, "working");
     if (isLiked) {
       post.likes.delete(userId);
     } else {
